@@ -6,6 +6,7 @@ Objectives (there are two parts to the challenge):
  2. Do a buffer overflow to get the program to print the flag.
 
 ***Acquire the Cookies***
+
 Now in theory, you could do this part legitimately by playing. Of course, it will take practically forever, and I'm an impatient man. The more practical way to get past this part, is to exploit it.
 We first investigate the decompiled code. Although I won't put the pictures for this part for the sake of brevity, when we investigate the main function, we see that two threads are created, a **grandma_loop** and an **io_loop**, these are the functions that run until we meet the cookie requirement, and at that point the win function gets run (something that we also take note of).
 
@@ -28,6 +29,7 @@ This means that we can underflow the cookies we have and "wrap around" to the ta
     p.sendline('4' * 51)
 
 ***Overflow the buffer***
+
 As a reward for exploiting cookie clicker, we get rewarded with yet another task that nobody saw coming. We first look at the **win** function we saw earlier. The function doesn't have any code that prints out the flag though, so we do some more digging and find a **print_flag** function that does exactly what we want. Now that we have the full picture, we know we need to perform a buffer overflow in the **win** function in order to overwrite its return address to the address of the **print_flag** function. We first find the address of the **print_flag** function with either the pwn library directly in the script, or in my case, with pwndbg/gdb's info function *print_flag*. The address is _0x0000000000400e9b_. We also notice that there is a stack cookie check, this stack cookie is assigned to a local variable, and that local variable is checked immediately after getting user input. If the local variable that we need to overflow over doesn't match the cookie. Then the program will crash. We need write the same value as stack cookie to the local variable when doing our buffer overflow.
 
 We trace the origin of stack_cookie using Ghidra and we find that stack_cookie is assigned a random number from a random number generator seeded by the current time when the program was run. So we need to get the current time, seed the random number generator in our script, and generate our own matching stack cookie to bypass the stack_cookie check. Finally, we need to overwrite the RBP register (which we can overwrite with 8 bytes of anything) and then overwrite the return address with the address of **print_flag** which we found earlier.
