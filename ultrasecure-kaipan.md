@@ -1,7 +1,7 @@
 # ultrasecure
 
-### Disassembly
-Upon disassembling the binary with ghidra, we find that the meat of the program is within one function called in main: password_check()
+### Decompilation
+Upon decompiling the binary with ghidra, we find that the meat of the program is within one function called in main: password_check()
 The function is for the most part pretty simple. The first part of the function is all variable declarations. Then we see usage of the
 srand function and the time function, meaning that we generate a random number seeded by the system time. We see that the random number
 is stored in a local variable and then printed to the screen. The user is supposed to enter this within .05 seconds (from running the program or observing that the decompiled code gets the time before and after your input to calculate how long it took and if it is not within .05 seconds then the program would quit), which for most people is impossible. This means that we have to use a script (pwntools lol) to enter in the input for us. We can simply get the random number printed to the screen through receiving output with pwntools, and then break the output string down to isolate the random number (split by space) to pass the random number back to the program as input with send.
