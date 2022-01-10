@@ -73,7 +73,7 @@ We now need to use the get messages endpoint at http://chatwurst.ctf-league.osus
 }
 ```
 
-The server gives us back a response with all the messages, with each message having a time sent property and a username property for the user that sent the message. We scroll through the list of messages to find the flag!
+The server gives us back a response with all the messages (backend not working and list is too long, so I won't include the actual response in the writeup), with each message having a time sent property and a username property for the user that sent the message. We scroll through the list of messages to find the flag!
 
 ### Flag
 
